@@ -21,13 +21,13 @@ import com.blogging.payload.PostResponse;
 import com.blogging.service.implementation.PostServiceImpl;
 
 @RestController
-@RequestMapping("/post")
+@RequestMapping("/users/")
 public class PostController {
 	@Autowired
 	PostServiceImpl postServiceImpl;
 
 	// Create post
-	@PostMapping("/user/{userID}/category/{categoryID}")
+	@PostMapping("/{userID}/category/{categoryID}/posts")
 	public ResponseEntity<PostDto> createPost(@RequestBody PostDto postDto, @PathVariable Integer userID,
 			@PathVariable Integer categoryID) {
 		PostDto postDto2 = postServiceImpl.createPost(postDto, userID, categoryID);
@@ -36,7 +36,7 @@ public class PostController {
 	}
 
 	// Delete Post
-	@DeleteMapping("/delete/{postID}")
+	@DeleteMapping("posts/{postID}")
 	public ResponseEntity<?> deletePost(@PathVariable Integer postID) {
 		postServiceImpl.detetePost(postID);
 		System.out.println("post deleted successfully");
@@ -44,20 +44,20 @@ public class PostController {
 	}
 
 	// Get Post by Category
-	@GetMapping("category/{categoryId}/post")
+	@GetMapping("category/{categoryId}/posts")
 	public ResponseEntity<List<PostDto>> getPostByCategory(@PathVariable Integer categoryId) {
 		List<PostDto> postDtos = postServiceImpl.getPostByCategory(categoryId);
 		return new ResponseEntity<List<PostDto>>(postDtos, HttpStatus.OK);
 	}
 
 	// Get Post by User
-	@GetMapping("user/{userId}/post")
+	@GetMapping("{userId}/posts")
 	public ResponseEntity<List<PostDto>> getPostByUser(@PathVariable Integer userId) {
 		List<PostDto> postDtos = postServiceImpl.getPostByUser(userId);
 		return new ResponseEntity<List<PostDto>>(postDtos, HttpStatus.OK);
 	}
 
-	// Get All Post
+	// Get All Post pagination and sorting
 	@GetMapping("/allpost")
 	public ResponseEntity<PostResponse> getAllPost(
 			@RequestParam(value = "pageNumber", defaultValue = "0", required = false) Integer pageNumber,
@@ -78,7 +78,7 @@ public class PostController {
 	}
 
 	// update post
-	@PutMapping("/{postId}")
+	@PutMapping("/posts/{postId}")
 	public ResponseEntity<PostDto> updatePost(@RequestBody PostDto postDto, @PathVariable Integer postId) {
 		PostDto postsDtos = postServiceImpl.updatPost(postDto, postId);
 		return new ResponseEntity<>(postsDtos, HttpStatus.OK);
